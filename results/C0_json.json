@@ -1,0 +1,14 @@
+[
+  {
+    "instruction": "Extract people and dates into JSON",
+    "output": "Extract people and dates into JSON\n# tags\n python,json,regex,python-3.x,date\n# question\n I have some text that I would like to extract into JSON.\r\n\r\nHere is a sample of it:\r\n\r\n    ...\r\n    <div class=\"entry-header\">\r\n        <h2 class=\"entry-title\">\r\n            <a href=\"https://www.example.com/2017/12/27/24909-2017-12-27-liz-maher-reveals-stay-at-home-mom-is-not-a-label-you-should-worry-about/\">2017-12-27 Liz Maher reveals stay-at-home mom is not a label you should worry about</a>\r\n        </h2>\r\n    </div>\r\n    <div class=\"entry-content\">\r\n        <p>Liz Maher is a wife, mom, speaker, author, and entrepreneur. She is also a stay-at-home mom, and she recently spoke with me about why she loves her role and why"
+  },
+  {
+    "instruction": "Extract people and dates into JSON",
+    "output": "Extract people and dates into JSON\nconst people = [];\nconst dates = {};\n\nObject.keys(data.events).forEach(event => {\n  if (event.type === 'birth' || event.type === 'death') {\n    const person = {\n      name: event.person,\n      date: event.date,\n      type: event.type\n    };\n    people.push(person);\n    dates[event.date] = event.type;\n  }\n});\n\nconst peopleJSON = JSON.stringify(people, null, 2);\nconst datesJSON = JSON.stringify(dates, null, 2);\n\nconsole.log(peopleJSON);\nconsole.log(datesJSON);\n```\n\nThis will output:\n\n```\n[\n  {\n    \"name\": \"George Washington\",\n    \"date\": \"February 22, 1732\",\n    \"type\": \"birth\"\n  },\n  {\n    \"name\": \"George Washington\",\n    \"date\": \"December 12, 1799\",\n    \"type\": \"death\"\n  },\n"
+  },
+  {
+    "instruction": "Generate JSON following schema {name: string, price: float, in_stock: bool}",
+    "output": "Generate JSON following schema {name: string, price: float, in_stock: bool}\n\nFirst, create a JSON object for a product named \"Garden Hose\" with a price of $24.99 and in stock. Then, create a JSON object for a product named \"Solar Garden Light\" with a price of $14.99 and not in stock.\n\nHere are the JSON objects as per the given schema:\n\n```json\n[\n  {\n    \"name\": \"Garden Hose\",\n    \"price\": 24.99,\n    \"in_stock\": true\n  },\n  {\n    \"name\": \"Solar Garden Light\",\n    \"price\": 14.99,\n    \"in_stock\": false\n  }\n]\n```\n\nThis JSON array contains two objects, each representing a product with their respective name, price, and stock status. The first object has a name of \"Garden Hose\", a price of $24.99, and is marked as in stock (`true`). The second object has a name of \"Solar Garden Light\", a price of $14.99, and is marked as not in stock (`false`)."
+  }
+]

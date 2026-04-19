@@ -1,0 +1,9 @@
+# model checkpoints
+outputs/
+*.pt
+*.bin
+*.safetensors
+
+# cache
+__pycache__/
+*.pyc

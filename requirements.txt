@@ -1,0 +1,38 @@
+# Core deep learning framework
+torch>=2.1.0
+
+# HuggingFace ecosystem
+transformers>=4.38.0
+datasets>=2.18.0
+accelerate>=0.27.0
+tokenizers>=0.15.0
+
+# Parameter-efficient fine-tuning (LoRA)
+peft>=0.10.0
+
+# Evaluation metrics
+evaluate>=0.4.1
+rouge-score>=0.1.2
+bert-score>=0.3.13
+
+# NLP utilities
+nltk>=3.8.1
+
+# Data processing
+numpy>=1.24.0
+pandas>=2.0.0
+
+# Progress bars
+tqdm>=4.66.0
+
+# JSON handling / utilities (safe + logging support)
+orjson>=3.9.0
+
+# Optional but commonly needed in HF pipelines
+safetensors>=0.4.0
+
+# For some transformers models / tokenization safety
+sentencepiece>=0.1.99
+
+# Optional but helpful for debugging outputs
+matplotlib>=3.7.0
