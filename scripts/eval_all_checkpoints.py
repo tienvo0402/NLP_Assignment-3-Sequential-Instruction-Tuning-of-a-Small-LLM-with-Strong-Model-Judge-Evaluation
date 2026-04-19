@@ -4,9 +4,7 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
 
-# =========================
 # PATHS
-# =========================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DATA_DIR = os.path.join(BASE_DIR, "../data")
@@ -24,10 +22,8 @@ CHECKPOINTS = {
 
 BASE_MODEL = "microsoft/Phi-3.5-mini-instruct"
 
+# DATA LOADER
 
-# =========================
-# DATA LOADER (FIXED)
-# =========================
 def load_dataset(path):
     if not os.path.exists(path):
         print(f"[ERROR] Missing dataset: {path}")
@@ -41,10 +37,8 @@ def load_dataset(path):
     except:
         return [json.loads(line) for line in content.splitlines() if line.strip()]
 
-
-# =========================
 # MODEL LOADER
-# =========================
+
 def load_model_and_tokenizer(path):
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL, trust_remote_code=True)
 
@@ -61,10 +55,8 @@ def load_model_and_tokenizer(path):
     model.eval()
     return model, tokenizer
 
-
-# =========================
 # GENERATION
-# =========================
+
 def generate(model, tokenizer, prompt):
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
 
@@ -78,10 +70,8 @@ def generate(model, tokenizer, prompt):
 
     return tokenizer.decode(outputs[0], skip_special_tokens=True)
 
+# SAVE RESULTS
 
-# =========================
-# SAVE RESULTS (NEW 🔥)
-# =========================
 def save_results(checkpoint_name, task_name, results):
     path = os.path.join(RESULTS_DIR, f"{checkpoint_name}_{task_name}.json")
 
@@ -90,10 +80,8 @@ def save_results(checkpoint_name, task_name, results):
 
     print(f"[SAVED] {path}")
 
+# EVALUATION
 
-# =========================
-# EVALUATION (FIXED)
-# =========================
 def evaluate(model, tokenizer, checkpoint_name, dataset_path, task_name):
     data = load_dataset(dataset_path)
 
@@ -101,7 +89,7 @@ def evaluate(model, tokenizer, checkpoint_name, dataset_path, task_name):
 
     results = []
 
-    for i, item in enumerate(data[:3]):  # sample 3 for debug
+    for i, item in enumerate(data[:3]):
         prompt = item["instruction"]
 
         output = generate(model, tokenizer, prompt)
@@ -115,13 +103,10 @@ def evaluate(model, tokenizer, checkpoint_name, dataset_path, task_name):
             "output": output
         })
 
-    # 🔥 SAVE OUTPUTS
     save_results(checkpoint_name, task_name, results)
 
-
-# =========================
 # RUN
-# =========================
+
 def run_checkpoint(name, path):
     print("\n" + "#" * 60)
     print(f"CHECKPOINT: {name}")
