@@ -10,9 +10,7 @@ from transformers import (
 )
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 
-# ======================
 # PATHS
-# ======================
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 train_path = os.path.join(BASE_DIR, "data", "alpaca_train.json")
@@ -20,17 +18,13 @@ eval_path = os.path.join(BASE_DIR, "data", "alpaca_eval.json")
 
 MODEL_NAME = "microsoft/Phi-3.5-mini-instruct"
 
-# ======================
-# LOAD DATASET (FULL)
-# ======================
+# LOAD DATASET
 dataset = load_dataset(
     "json",
     data_files={"train": train_path, "test": eval_path}
 )
 
-# ======================
 # TOKENIZER
-# ======================
 tokenizer = AutoTokenizer.from_pretrained(
     MODEL_NAME,
     trust_remote_code=True
@@ -39,9 +33,7 @@ tokenizer = AutoTokenizer.from_pretrained(
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.padding_side = "right"
 
-# ======================
 # TOKENIZATION
-# ======================
 def tokenize(example):
     instruction = example["instruction"]
     input_text = example["input"] if example["input"] else ""
@@ -75,9 +67,7 @@ def tokenize(example):
 
 dataset = dataset.map(tokenize, remove_columns=dataset["train"].column_names)
 
-# ======================
 # MODEL (QLoRA)
-# ======================
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_quant_type="nf4",
@@ -95,9 +85,7 @@ model = AutoModelForCausalLM.from_pretrained(
 
 model = prepare_model_for_kbit_training(model)
 
-# ======================
 # LoRA CONFIG
-# ======================
 lora_config = LoraConfig(
     r=8,
     lora_alpha=16,
@@ -110,9 +98,7 @@ lora_config = LoraConfig(
 model = get_peft_model(model, lora_config)
 model.print_trainable_parameters()
 
-# ======================
 # TRAINING ARGS
-# ======================
 training_args = TrainingArguments(
     output_dir="outputs/stage1",
 
@@ -134,9 +120,7 @@ training_args = TrainingArguments(
     remove_unused_columns=False
 )
 
-# ======================
 # TRAINER
-# ======================
 trainer = Trainer(
     model=model,
     args=training_args,
@@ -144,14 +128,10 @@ trainer = Trainer(
     eval_dataset=dataset["test"]
 )
 
-# ======================
 # TRAIN
-# ======================
 trainer.train()
 
-# ======================
 # SAVE
-# ======================
 model.save_pretrained("outputs/stage1")
 tokenizer.save_pretrained("outputs/stage1")
 
