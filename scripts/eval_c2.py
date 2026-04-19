@@ -2,20 +2,15 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel
 
-# ======================
 # CONFIG
-# ======================
 BASE_MODEL = "microsoft/Phi-3.5-mini-instruct"
 
-# IMPORTANT:
-# This should be your FINAL Stage 2 adapter folder
 STAGE2_PATH = "outputs/stage2_adapter"
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-# ======================
 # TOKENIZER
-# ======================
+
 tokenizer = AutoTokenizer.from_pretrained(
     BASE_MODEL,
     trust_remote_code=True
@@ -23,9 +18,9 @@ tokenizer = AutoTokenizer.from_pretrained(
 
 tokenizer.pad_token = tokenizer.eos_token
 
-# ======================
+
 # LOAD BASE MODEL (4-bit QLoRA style)
-# ======================
+
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_quant_type="nf4",
@@ -41,17 +36,17 @@ base_model = AutoModelForCausalLM.from_pretrained(
     attn_implementation="eager"
 )
 
-# ======================
+
 # LOAD STAGE 2 ADAPTER
-# ======================
+
 model = PeftModel.from_pretrained(base_model, STAGE2_PATH)
 model.eval()
 
 print("Checkpoint 2 loaded successfully!\n")
 
-# ======================
+
 # PROMPT FORMAT (SAME AS TRAINING)
-# ======================
+
 def build_prompt(text):
     return f"""### Instruction:
 {text}
@@ -62,9 +57,7 @@ def build_prompt(text):
 ### Response:
 """
 
-# ======================
 # GENERATION FUNCTION
-# ======================
 def generate(text):
     prompt = build_prompt(text)
 
@@ -91,18 +84,15 @@ def generate(text):
     # remove prompt section
     return decoded.split("### Response:")[-1].strip()
 
-# ======================
+
 # TEST SET (SAME AS C0 / C1)
-# ======================
 test_prompts = [
     "Explain what a neural network is in simple terms.",
     "Write a short summary of machine learning.",
     "List three uses of artificial intelligence."
 ]
 
-# ======================
 # RUN EVALUATION
-# ======================
 print("=" * 50)
 print("CHECKPOINT 2 EVALUATION (STAGE 2 MODEL)")
 print("=" * 50)
