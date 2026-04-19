@@ -5,7 +5,7 @@ from tqdm import tqdm
 from openai import OpenAI
 from dotenv import load_dotenv
 
-load_dotenv()  # load .env in root folder
+load_dotenv()  
 
 client = OpenAI(
     api_key=os.getenv("UTSA_API_KEY"),
@@ -97,9 +97,7 @@ task_functions = [
     generate_tool
 ]
 
-# =========================
-# 🤖 CALL TEACHER MODEL
-# =========================
+# CALL TEACHER MODEL
 
 def call_model(prompt):
     response = client.chat.completions.create(
@@ -112,7 +110,7 @@ def call_model(prompt):
 
 dataset = []
 
-TARGET_SIZE = 300  # change if needed
+TARGET_SIZE = 300
 
 for _ in tqdm(range(TARGET_SIZE)):
     task_fn = random.choice(task_functions)
