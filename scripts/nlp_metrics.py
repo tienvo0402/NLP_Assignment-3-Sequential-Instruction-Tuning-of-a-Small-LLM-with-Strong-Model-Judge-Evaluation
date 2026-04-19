@@ -8,15 +8,12 @@ from bert_score import score as bert_score
 from collections import Counter
 
 
-# =========================
 # PATH
-# =========================
 RESULTS_DIR = "/work/qrc637/NLP_Assignment3/results"
 
 
-# =========================
 # SIMPLE ROUGE (NO NLTK)
-# =========================
+
 def simple_rouge(pred, ref):
     pred_tokens = pred.lower().split()
     ref_tokens = ref.lower().split()
@@ -37,17 +34,13 @@ def simple_rouge(pred, ref):
     return f1
 
 
-# =========================
 # LOAD DATA
-# =========================
 def load(path):
     with open(path, "r") as f:
         return json.load(f)
 
 
-# =========================
 # EVALUATE FILE
-# =========================
 def evaluate(path):
     data = load(path)
 
@@ -63,7 +56,7 @@ def evaluate(path):
         preds.append(pred)
         refs.append(ref)
 
-    # BERTScore (safe)
+    # BERTScore
     P, R, F1 = bert_score(preds, refs, lang="en", verbose=False)
 
     return {
@@ -72,9 +65,7 @@ def evaluate(path):
     }
 
 
-# =========================
 # MAIN
-# =========================
 def main():
     files = [
         "C0_alpaca.json",
