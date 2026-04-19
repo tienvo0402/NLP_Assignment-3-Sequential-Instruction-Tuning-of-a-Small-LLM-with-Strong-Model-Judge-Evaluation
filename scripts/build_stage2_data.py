@@ -1,10 +1,7 @@
 import json
 import random
 
-# =========================
 # JSON TASK TEMPLATES
-# =========================
-
 def json_extraction():
     return {
         "instruction": "Extract entities from the text into JSON format",
@@ -61,10 +58,7 @@ def tool_call():
         }, indent=2)
     }
 
-# =========================
 # BUILD DATASET
-# =========================
-
 dataset = []
 
 for _ in range(400):
@@ -76,9 +70,7 @@ for _ in range(400):
 
 random.shuffle(dataset)
 
-# =========================
 # SAVE
-# =========================
 
 with open("stage2_data.json", "w") as f:
     json.dump(dataset, f, indent=2)
