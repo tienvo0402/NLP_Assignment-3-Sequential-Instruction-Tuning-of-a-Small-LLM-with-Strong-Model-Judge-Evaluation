@@ -6,9 +6,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS_DIR = os.path.join(BASE_DIR, "results")
 
 
-# =========================
 # Extract JSON safely from model output
-# =========================
 def extract_json(text):
     if not isinstance(text, str):
         return None
@@ -22,7 +20,7 @@ def extract_json(text):
     except:
         pass
 
-    # try to extract array JSON first (IMPORTANT for your case)
+    # try to extract array JSON first
     match = re.search(r"\[[\s\S]*\]", text)
     if match:
         try:
@@ -41,9 +39,7 @@ def extract_json(text):
     return None
 
 
-# =========================
 # Load results file
-# =========================
 def load_results(path):
     if not os.path.exists(path):
         print(f"[MISSING] {path}")
@@ -53,14 +49,11 @@ def load_results(path):
         return json.load(f)
 
 
-# =========================
 # Schema validation (lightweight)
-# =========================
 def check_schema(obj):
     if not isinstance(obj, dict):
         return False
 
-    # flexible schema check (covers your assignment types)
     allowed_keys_sets = [
         {"name", "price", "in_stock"},
         {"people", "dates"},
@@ -76,9 +69,7 @@ def check_schema(obj):
     return False
 
 
-# =========================
 # Evaluate file
-# =========================
 def evaluate_file(path):
     data = load_results(path)
 
@@ -104,9 +95,7 @@ def evaluate_file(path):
     }
 
 
-# =========================
 # MAIN
-# =========================
 def main():
     print("\n===== JSON METRICS =====")
     print("RESULTS DIR:", RESULTS_DIR)
