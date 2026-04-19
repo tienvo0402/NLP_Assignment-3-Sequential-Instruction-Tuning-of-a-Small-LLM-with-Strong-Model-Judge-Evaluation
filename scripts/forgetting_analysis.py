@@ -4,18 +4,13 @@ import json
 RESULTS_DIR = "/work/qrc637/NLP_Assignment3/results"
 
 
-# =========================
 # Load JSON
-# =========================
 def load(path):
     with open(path, "r") as f:
         return json.load(f)
 
 
-# =========================
 # Simple heuristic judge
-# (needed because no stored labels exist)
-# =========================
 def simple_score(text):
     """
     Heuristic scoring:
@@ -39,9 +34,7 @@ def simple_score(text):
     return score
 
 
-# =========================
 # Compare two checkpoints
-# =========================
 def compare(c1_file, c2_file):
 
     c1 = load(os.path.join(RESULTS_DIR, c1_file))
@@ -93,8 +86,6 @@ def compare(c1_file, c2_file):
         print("No forgetting or improvement")
 
 
-# =========================
 # MAIN
-# =========================
 if __name__ == "__main__":
     compare("C1_alpaca.json", "C2_alpaca.json")
