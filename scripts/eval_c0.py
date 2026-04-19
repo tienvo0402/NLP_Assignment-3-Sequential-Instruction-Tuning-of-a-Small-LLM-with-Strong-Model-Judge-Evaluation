@@ -1,9 +1,7 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-# ======================
 # MODEL
-# ======================
 MODEL_NAME = "microsoft/Phi-3.5-mini-instruct"
 
 print("Loading Checkpoint 0 (base model)...")
@@ -27,10 +25,7 @@ model.eval()
 
 print("Checkpoint 0 loaded successfully!\n")
 
-
-# ======================
 # GENERATION
-# ======================
 def generate(prompt):
 
     messages = [
@@ -60,25 +55,19 @@ def generate(prompt):
             pad_token_id=tokenizer.eos_token_id
         )
 
-    # ✅ remove prompt from output
+    # remove prompt from output
     generated_tokens = outputs[0][input_ids.shape[-1]:]
 
     return tokenizer.decode(generated_tokens, skip_special_tokens=True)
 
-
-# ======================
 # TEST SET
-# ======================
 test_prompts = [
     "Explain what a neural network is in simple terms.",
     "Write a short summary of machine learning.",
     "List three uses of artificial intelligence."
 ]
 
-
-# ======================
 # EVALUATION
-# ======================
 print("=" * 50)
 print("CHECKPOINT 0 EVALUATION (BASE MODEL)")
 print("=" * 50)
