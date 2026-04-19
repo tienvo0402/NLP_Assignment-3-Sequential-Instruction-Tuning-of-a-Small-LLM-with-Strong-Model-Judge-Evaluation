@@ -10,29 +10,23 @@ from transformers import (
 )
 from peft import PeftModel, prepare_model_for_kbit_training
 
-# ======================
 # CONFIG
-# ======================
 BASE_MODEL = "microsoft/Phi-3.5-mini-instruct"
-STAGE1_PATH = "outputs/stage1_debug"   # MUST be local folder
+STAGE1_PATH = "outputs/stage1_debug"   
 DATA_PATH = "stage2_data.json"
 
 OUTPUT_DIR = "outputs/stage2_adapter"
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-# ======================
 # TOKENIZER
-# ======================
 tokenizer = AutoTokenizer.from_pretrained(
     BASE_MODEL,
     trust_remote_code=True
 )
 tokenizer.pad_token = tokenizer.eos_token
 
-# ======================
 # LOAD BASE MODEL (QLoRA)
-# ======================
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_quant_type="nf4",
@@ -50,9 +44,7 @@ base_model = AutoModelForCausalLM.from_pretrained(
 
 base_model = prepare_model_for_kbit_training(base_model)
 
-# ======================
-# LOAD STAGE 1 ADAPTER (LOCAL FIX)
-# ======================
+# LOAD STAGE 1 ADAPTER
 model = PeftModel.from_pretrained(
     base_model,
     STAGE1_PATH,
@@ -62,14 +54,10 @@ model = PeftModel.from_pretrained(
 
 print("Stage 1 adapter loaded successfully!")
 
-# ======================
 # LOAD DATASET
-# ======================
 dataset = load_dataset("json", data_files=DATA_PATH)
 
-# ======================
 # FORMAT DATA
-# ======================
 def format_example(example):
     instruction = example["instruction"]
     inp = example.get("input", "")
@@ -93,17 +81,13 @@ def format_example(example):
 
 dataset = dataset.map(format_example, remove_columns=dataset["train"].column_names)
 
-# ======================
 # DATA COLLATOR
-# ======================
 data_collator = DataCollatorForLanguageModeling(
     tokenizer=tokenizer,
     mlm=False
 )
 
-# ======================
 # TRAINING ARGS
-# ======================
 training_args = TrainingArguments(
     output_dir=OUTPUT_DIR,
     per_device_train_batch_size=2,
@@ -117,9 +101,7 @@ training_args = TrainingArguments(
     report_to="none"
 )
 
-# ======================
 # TRAINER
-# ======================
 trainer = Trainer(
     model=model,
     args=training_args,
@@ -127,14 +109,10 @@ trainer = Trainer(
     data_collator=data_collator
 )
 
-# ======================
 # TRAIN
-# ======================
 trainer.train()
 
-# ======================
 # SAVE FINAL MODEL
-# ======================
 model.save_pretrained(OUTPUT_DIR)
 tokenizer.save_pretrained(OUTPUT_DIR)
 
