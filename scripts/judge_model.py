@@ -5,9 +5,6 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
 import torch
 
-# ==================================================
-# FIXED PATH HANDLING (IMPORTANT)
-# ==================================================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 RESULTS_DIR = os.path.abspath(os.path.join(BASE_DIR, "../results"))
 
@@ -26,9 +23,7 @@ JSON_FILES = {
 BASE_MODEL = "microsoft/Phi-3.5-mini-instruct"
 
 
-# ==================================================
 # LOAD RESULTS SAFE
-# ==================================================
 def load_results(path):
     if not os.path.exists(path):
         print(f"[MISSING] {path}")
@@ -38,11 +33,8 @@ def load_results(path):
         return json.load(f)
 
 
-# ==================================================
-# SIMPLE JUDGE (SAFE BASELINE)
-# ==================================================
+# SIMPLE JUDGE 
 def judge(a, b):
-    # simple heuristic (you can upgrade later if needed)
     if len(a) > len(b):
         return "A"
     elif len(b) > len(a):
@@ -50,9 +42,7 @@ def judge(a, b):
     return "Tie"
 
 
-# ==================================================
 # COMPARE FUNCTION
-# ==================================================
 def compare(file_a, file_b):
 
     print("\n" + "=" * 40)
@@ -86,9 +76,7 @@ def compare(file_a, file_b):
     print(f"Ties: {tie}")
 
 
-# ==================================================
 # MAIN
-# ==================================================
 def main():
 
     print("\nRESULTS DIR:", RESULTS_DIR)
